@@ -54,7 +54,7 @@ module Zeebe
       jobs = []
       client.activate_jobs(
         Z::ActivateJobsRequest.new(
-          type: @service.service_type.to_s,
+          type: @service.task_type.to_s,
           worker: `hostname`,
           timeout: @opts[:job_timeout],
           amount: @opts[:jobs_per_batch]
@@ -68,7 +68,7 @@ module Zeebe
     # runs a job. This job should be something that was enumerated from the list
     # of jobs returned by activate_jobs
     def run_job(job)
-      result = @service.call(job.payload)
+      result = @service.run(job.payload)
       puts client.complete_job(
         Z::CompleteJobRequest.new(
           jobKey: job.key,
