@@ -1,15 +1,15 @@
 PATH
   remote: .
   specs:
-    zeebe-video-upscaler (0.1.0)
+    hydra-upscaler-workers (0.1.0)
       aws-sdk-s3 (~> 1.30)
+      docker-api (~> 1.34)
+      streamio-ffmpeg (~> 3.0)
       zeebe-client (~> 0.3.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.6.0)
-      public_suffix (>= 2.0.2, < 4.0)
     ast (2.4.0)
     aws-eventstream (1.0.1)
     aws-partitions (1.141.0)
@@ -35,8 +35,6 @@ GEM
     docker-api (1.34.2)
       excon (>= 0.47.0)
       multi_json
-    down (4.8.0)
-      addressable (~> 2.5)
     excon (0.62.0)
     faker (1.9.3)
       i18n (>= 0.7)
@@ -45,10 +43,10 @@ GEM
     fuubar (2.3.2)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
-    google-protobuf (3.6.1)
+    google-protobuf (3.6.1-universal-darwin)
     googleapis-common-protos-types (1.0.3)
       google-protobuf (~> 3.0)
-    grpc (1.18.0)
+    grpc (1.18.0-universal-darwin)
       google-protobuf (~> 3.1)
       googleapis-common-protos-types (~> 1.0.0)
     guard (2.15.0)
@@ -88,7 +86,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     psych (3.1.0)
-    public_suffix (3.0.3)
     rainbow (3.0.0)
     rake (12.3.2)
     rb-fsevent (0.10.3)
@@ -131,17 +128,14 @@ PLATFORMS
 
 DEPENDENCIES
   bundler-audit (~> 0.6.1)
-  docker-api (~> 1.34)
-  down (~> 4.8)
   faker (~> 1.9)
   fuubar (~> 2.3)
   guard (~> 2.15)
   guard-rspec (~> 4.7)
+  hydra-upscaler-workers!
   rake (~> 12.3)
   rspec (~> 3.8)
   rubocop (~> 0.65.0)
-  streamio-ffmpeg (~> 3.0)
-  zeebe-video-upscaler!
 
 BUNDLED WITH
    2.0.1
