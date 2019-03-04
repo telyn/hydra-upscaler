@@ -3,9 +3,11 @@ stages:
 
 test:
   stage: test
+  image: ruby:2.5-slim
   services:
     - camunda/zeebe:0.15.1
   before_script:
+    - gem install bundler
     - bundle install
   script:
     - TEST_ZEEBE=zeebe:26500 bundle exec rspec
