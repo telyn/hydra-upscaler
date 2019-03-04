@@ -3,10 +3,10 @@
 require_relative 'lib/hydra_upscaler/version'
 
 Gem::Specification.new do |s|
-  s.name = 'hydra-upscaler-workers'
+  s.name = 'hydra-upscaler-common'
   s.version = HydraUpscaler::VERSION
   s.licenses = ['MIT']
-  s.summary = 'Use Zeebe and Waifu2x to upscale videos'
+  s.summary = 'Common files for hydra-upscaler-workers and hydra-upscaler-client'
   s.description = <<~DESC
     Hydra upscaler is a distributed system to run an entire video through
     waifu2x whenever you leave your waifu2x-capable machine(s) on.
@@ -18,18 +18,12 @@ Gem::Specification.new do |s|
   s.authors = ['Telyn Z.']
   s.email = '175827+telyn@users.noreply.github.com'
   s.files = FileList[
-    'Rakefile',
-    'lib/hydra_upscaler.rb',
-    'lib/hydra_upscaler/image_list.rb',
+    'lib/hydra_upscaler/s3_helper.rb',
     'lib/hydra_upscaler/version.rb',
-    'lib/hydra_upscaler/workers.rb',
-    'lib/hydra_upscaler/workers/*.rb',
+    'lib/util/*',
+    'lib/zeebe/*',
   ]
-
   s.add_runtime_dependency 'aws-sdk-s3', '~> 1.30'
-  s.add_runtime_dependency 'docker-api', '~> 1.34'
-  s.add_runtime_dependency 'hydra-upscaler-common', HydraUpscaler::VERSION
-  s.add_runtime_dependency 'streamio-ffmpeg', '~> 3.0'
   s.add_runtime_dependency 'zeebe-client', '~> 0.3.0'
 
   s.add_development_dependency 'bundler-audit', '~> 0.6.1'
