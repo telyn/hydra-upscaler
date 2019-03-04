@@ -10,7 +10,7 @@ test:
     - gem install bundler
     - bundle install
   script:
-    - TEST_ZEEBE=zeebe:26500 bundle exec rspec
+    - TEST_ZEEBE=camunda-zeebe:26500 bundle exec rspec
 
 
 # package-client:
