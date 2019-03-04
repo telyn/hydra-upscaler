@@ -1,0 +1,22 @@
+stages:
+  - test
+
+test:
+  stage: test
+  services:
+    - zeebe
+  before_script:
+    - bundle install
+  script:
+    - TEST_ZEEBE=zeebe:26500 bundle exec rspec
+
+
+# package-client:
+#   stage: package
+#   script:
+#     - gem build hydra-upscaler-client.gemspec
+# 
+# package-workers:
+#   stage: package
+#   script:
+#     - gem build hydra-upscaler-workers.gemspec
