@@ -7,7 +7,7 @@ test:
   services:
     - camunda/zeebe:0.15.1
   before_script:
-    - gem install bundler
+    - gem install bundler rake
     - bundle install
   script:
     - TEST_ZEEBE=camunda-zeebe:26500 bundle exec rspec
