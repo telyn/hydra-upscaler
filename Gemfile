@@ -3,4 +3,4 @@
 source 'https://rubygems.org'
 
 gemspec name: 'hydra-upscaler-common'
-gemspec name: 'hydra-upscaler-worker'
+gemspec name: 'hydra-upscaler-workers'

@@ -1,9 +1,13 @@
 PATH
   remote: .
   specs:
+    hydra-upscaler-common (0.1.0)
+      aws-sdk-s3 (~> 1.30)
+      zeebe-client (~> 0.3.0)
     hydra-upscaler-workers (0.1.0)
       aws-sdk-s3 (~> 1.30)
       docker-api (~> 1.34)
+      hydra-upscaler-common (= 0.1.0)
       streamio-ffmpeg (~> 3.0)
       zeebe-client (~> 0.3.0)
 
@@ -132,6 +136,7 @@ DEPENDENCIES
   fuubar (~> 2.3)
   guard (~> 2.15)
   guard-rspec (~> 4.7)
+  hydra-upscaler-common!
   hydra-upscaler-workers!
   rake (~> 12.3)
   rspec (~> 3.8)

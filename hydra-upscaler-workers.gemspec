@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'lib/hydra_upscaler/version'
+require 'rake'
 
 Gem::Specification.new do |s|
   s.name = 'hydra-upscaler-workers'
