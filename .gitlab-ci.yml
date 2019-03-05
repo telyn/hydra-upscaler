@@ -13,7 +13,7 @@ test:
     - TEST_ZEEBE=camunda-zeebe:26500 bundle exec rspec
 
 dependency_scanning:
-  state: test
+  stage: test
   image: docker:stable
   tags:
     - privileged
