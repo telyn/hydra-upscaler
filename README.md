@@ -2,6 +2,7 @@ Hydra Upscaler
 ==============
 
 [![pipeline status](https://gitlab.com/telyn/hydra-upscaler/badges/master/pipeline.svg)](https://gitlab.com/telyn/hydra-upscaler/commits/master) [![coverage report](https://gitlab.com/telyn/hydra-upscaler/badges/master/coverage.svg)](https://gitlab.com/telyn/hydra-upscaler/commits/master)
+
 Hydra upscaler is a distributed system to run an entire video through
 waifu2x whenever you leave your waifu2x-capable machine(s) on.
 
