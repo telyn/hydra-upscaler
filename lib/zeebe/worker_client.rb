@@ -16,7 +16,7 @@ module Zeebe
     # Takes a Zeebe::Worker implementation and a zeebe client or a URL for the
     # broker and readies the worker to activate the jobs.
     def initialize(service:,
-                   url: 'localhost:26501',
+                   url: 'localhost:26500',
                    client: nil,
                    jobs_per_batch: 1,
                    job_timeout: 3600)
@@ -25,11 +25,11 @@ module Zeebe
       @opts = { jobs_per_batch: jobs_per_batch,
                 job_timeout: job_timeout }
       unless service < Zeebe::Worker
-        raise StandardError, "#{type} is not an zeebe service."
+        raise StandardError, "#{type} is not a zeebe service."
       end
     end
 
-    # starts an infinite loop streaming jobs from the broker
+    # starts an infinite loop streaming jobs from the broker
     # internally this calls activate_jobs
     # TODO: add a way of getting out of the loop
     def start!
@@ -55,7 +55,7 @@ module Zeebe
       client.activate_jobs(
         Z::ActivateJobsRequest.new(
           type: @service.task_type.to_s,
-          worker: `hostname`,
+          worker: `hostname`.chomp,
           timeout: @opts[:job_timeout],
           amount: @opts[:jobs_per_batch]
         )
@@ -69,7 +69,7 @@ module Zeebe
     # of jobs returned by activate_jobs
     def run_job(job)
       result = @service.run(job.payload)
-      puts client.complete_job(
+      client.complete_job(
         Z::CompleteJobRequest.new(
           jobKey: job.key,
           payload: result

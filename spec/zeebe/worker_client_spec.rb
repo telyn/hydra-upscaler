@@ -31,7 +31,10 @@ RSpec.describe Zeebe::WorkerClient, if: ENV['TEST_ZEEBE'] do
   around do |task|
     instanceKey
     task.run
-    cancel_workflow_instance(url, instanceKey) rescue GRPC::NotFound
+    begin
+      cancel_workflow_instance(url, instanceKey)
+    rescue GRPC::NotFound
+    end
   end
 
   it 'runs the first service' do
@@ -41,6 +44,6 @@ RSpec.describe Zeebe::WorkerClient, if: ENV['TEST_ZEEBE'] do
   it 'alters the payload' do
     subject.run_batch
     jobs = activate_jobs(url, service.task_type + '2')
-    expect(JSON.parse(jobs[0].payload)).to eq({'state' => 'complete'})
+    expect(JSON.parse(jobs[0].payload)).to eq('state' => 'complete')
   end
 end
