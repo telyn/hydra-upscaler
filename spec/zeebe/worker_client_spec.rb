@@ -30,6 +30,8 @@ RSpec.describe Zeebe::WorkerClient, if: ENV['TEST_ZEEBE'] do
 
   around do |task|
     instanceKey
+    # sleep for a moment to allow zeebe to settle
+    sleep 0.2
     task.run
     begin
       cancel_workflow_instance(url, instanceKey)
@@ -38,22 +40,12 @@ RSpec.describe Zeebe::WorkerClient, if: ENV['TEST_ZEEBE'] do
   end
 
   it 'runs the first service' do
-    sleep 0.2
     expect { subject.run_batch }.to change { service.state }.to 'complete'
   end
 
   it 'alters the payload sent to the next service' do
     subject.run_batch
-    count = 0
-    jobs = nil
-    loop do
-      jobs = activate_jobs(url, service.task_type + '2')
-      break if jobs.count.positive?
-      count += 1
-      raise StandardError, 'No response for activate_jobs after 1 second' if count > 10
-
-      sleep 0.1
-    end
+    jobs = activate_jobs(url, service.task_type + '2')
     expect(JSON.parse(jobs[0].payload)).to eq('state' => 'complete')
   end
 end
