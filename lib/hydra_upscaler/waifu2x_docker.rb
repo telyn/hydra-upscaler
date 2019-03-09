@@ -1,10 +1,12 @@
 require 'tmpdir'
+require 'hydra_upscaler/image_list'
 
 module HydraUpscaler
   # Calls Waifu2x using Docker, upscales a list of images.
   class Waifu2xDocker
     def initialize(opts)
       @model = opts.fetch('model', 'noise_scale')
+	  @noise_level = opts.fetch('noise_level', 1)
       @picture_type = opts.fetch('picture_type', 'art')
       @scale_factor = opts.fetch('scale_factor', 2)
       @batch_number = opts.fetch('batch_number') do
@@ -54,11 +56,11 @@ module HydraUpscaler
     def cmd
       @cmd ||= ['waifu2x', 'th', 'waifu2x.lua',
                 '-m', model,
-                '-scale', scale_factor,
-                '-noise_level', noise_level,
+                '-scale', scale_factor.to_s,
+                '-noise_level', noise_level.to_s,
                 '-model_dir', "./models/#{picture_type}",
                 '-i', '/images/src/image_list.txt',
-                '-o', "/images/dest/#{format('%06d', batch_number)}_%06d.png"]
+                '-o', "/images/dest/#{format('%06d', batch_number)}_%06d.png"] \
       + conditional_args
     end
 
