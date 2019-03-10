@@ -8,18 +8,21 @@ module HydraUpscaler
       @dir = dir
     end
 
-    def write
+    def write(dirname = @dir)
+
       filename = File.join(dir, 'image_list.txt')
       File.open(filename, 'w') do |f|
-        f.write(list.join("\n"))
+        f.write(list(dirname).join("\n"))
       end
       filename
     end
 
     private
 
-    def list
-      Dir[File.join(dir, '*.png')].sort
+    def list(dirname)
+      Dir[File.join(dir, '*.png')].map do |file|
+        File.join(dirname, File.basename(file))
+      end.sort
     end
 
     attr_reader :dir

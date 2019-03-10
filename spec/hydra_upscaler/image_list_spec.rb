@@ -33,6 +33,7 @@ RSpec.describe HydraUpscaler::ImageList do
         IO.write(File.join(dir, 'file1.png'), 'hello')
         IO.write(File.join(dir, 'file3.png'), 'png')
       end
+
       it do
         is_expected.to eq [
           File.join(dir, 'file1.png'),
@@ -40,6 +41,21 @@ RSpec.describe HydraUpscaler::ImageList do
           File.join(dir, 'file3.png'),
           File.join(dir, 'file4.png')
         ]
+      end
+      context 'when dirname is set' do
+        let(:dirname) { 'jazzy_jeff' }
+        subject do
+          described_class.new(dir).write(dirname)
+          IO.readlines(File.join(dir, 'image_list.txt'), "\n", chomp: true)
+        end
+        it do
+          is_expected.to eq [
+            File.join('jazzy_jeff', 'file1.png'),
+            File.join('jazzy_jeff', 'file2.png'),
+            File.join('jazzy_jeff', 'file3.png'),
+            File.join('jazzy_jeff', 'file4.png')
+          ]
+        end
       end
     end
   end

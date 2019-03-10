@@ -5,13 +5,17 @@ require 'docker-api'
 
 RSpec.describe HydraUpscaler::Waifu2xDocker do
   let(:src_dir) { File.realpath(File.join(__dir__, '..', 'support', 'files', 'frames')) }
-  let(:dest_dir) { Dir.mktmpdir }
+  let(:dest_dir) { File.join(__dir__, '..', 'test-out') }
   subject { described_class.new(args).run! }
   docker_is_running = begin
                         Docker.info['Runtimes'] && true
                       rescue Excon::Error::Socket
                         false
                       end
+
+  before do
+    Dir.mkdir dest_dir
+  end
 
   after do
     FileUtils.rm_r dest_dir
@@ -23,15 +27,26 @@ RSpec.describe HydraUpscaler::Waifu2xDocker do
       it 'upscales the images' do
         subject
         expect(Dir.entries(dest_dir).sort).to eq ['.', '..',
-                                                  '000001_000001.png', 
-                                                  '000001_000002.png', 
-                                                  '000001_000003.png'
+                                                  '000001_000001.png',
+                                                  '000001_000002.png',
+                                                  '000001_000003.png',
+                                                  '000001_000004.png',
+                                                  '000001_000005.png',
+                                                  '000001_000006.png',
+                                                  '000001_000007.png',
+                                                  '000001_000008.png',
+                                                  '000001_000009.png',
+                                                  '000001_000010.png'
                                                  ]
       end
     end
   end
 
   context 'when Docker is stubbed' do
+    before do
+      allow(Docker).to receive(:info).and_return('Runtimes' => {'runc' => {}})
+    end
+
     around do |test|
       test.run
     rescue Excon::Error::Socket
@@ -45,19 +60,19 @@ RSpec.describe HydraUpscaler::Waifu2xDocker do
         container = {
           'Image' => 'telyn/waifu2x',
           'Cmd' => [
-            'waifu2x', 'th', 'waifu2x.lua', '-m', 'noise_scale', '-scale', '2',
-            '-noise_level', '1', '-model_dir', './models/art',
-            '-i', '/images/src/image_list.txt',
+            'th', 'waifu2x.lua', '-m', 'noise_scale', '-scale', '2',
+            '-noise_level', '1', '-model_dir', './models/upconv_7/art',
+            '-l', '/images/src/image_list.txt',
             '-o', '/images/dest/000001_%06d.png'
           ],
           'HostConfig' => {
             'Mounts' => [
               {
                 'Source' => src_dir, 'Target' => '/images/src',
-                'Readonly' => true, 'Type' => 'volume'
+                'Readonly' => true, 'Type' => 'bind'
               }, {
                 'Source' => dest_dir, 'Target' => '/images/dest',
-                'Readonly' => false, 'Type' => 'volume'
+                'Readonly' => false, 'Type' => 'bind'
               }
             ],
             'Runtime' => 'runc'

@@ -6,8 +6,8 @@ module HydraUpscaler
   class Waifu2xDocker
     def initialize(opts)
       @model = opts.fetch('model', 'noise_scale')
-	  @noise_level = opts.fetch('noise_level', 1)
-      @picture_type = opts.fetch('picture_type', 'art')
+      @noise_level = opts.fetch('noise_level', 1)
+      @picture_type = opts.fetch('picture_type', 'upconv_7/art')
       @scale_factor = opts.fetch('scale_factor', 2)
       @batch_number = opts.fetch('batch_number') do
         raise ArgumentError, 'batch_number must be specified'
@@ -15,7 +15,10 @@ module HydraUpscaler
       @src_dir = opts.fetch('src_dir') do
         raise ArgumentError, 'src_dir must be specified'
       end
-      @dest_dir = opts.fetch('dest_dir') { Dir.mktmpdir }
+      @dest_dir = opts.fetch('dest_dir') do
+        raise ArgumentError, 'src_dir must be specified'
+      end
+
       # defaulting to my own image because I can (reasonably) guarantee it was
       # built from vanilla waifu2x and is up to date (assuming that github app I
       # installed to my repo works, anyway)
@@ -28,6 +31,7 @@ module HydraUpscaler
       container.wait
     end
 
+
     private
 
     attr_reader :batch_number,
@@ -39,7 +43,7 @@ module HydraUpscaler
                 :src_dir
 
     def make_image_list
-      ImageList.new(src_dir).write
+      ImageList.new(src_dir).write('/images/src')
     end
 
     def container
@@ -54,12 +58,12 @@ module HydraUpscaler
     end
 
     def cmd
-      @cmd ||= ['waifu2x', 'th', 'waifu2x.lua',
+      @cmd ||= ['th', 'waifu2x.lua',
                 '-m', model,
                 '-scale', scale_factor.to_s,
                 '-noise_level', noise_level.to_s,
                 '-model_dir', "./models/#{picture_type}",
-                '-i', '/images/src/image_list.txt',
+                '-l', '/images/src/image_list.txt',
                 '-o', "/images/dest/#{format('%06d', batch_number)}_%06d.png"] \
       + conditional_args
     end
@@ -80,7 +84,7 @@ module HydraUpscaler
       ]
     end
 
-    def mount(target:, src:, readonly: false, type: 'volume')
+    def mount(target:, src:, readonly: false, type: 'bind')
       {
         'Source' => src,
         'Target' => target,
